@@ -1,24 +1,20 @@
 # kotoba-lang/org-oasis-odf
 
-Zero-dep portable `.cljc` OpenDocument Format (OASIS ODF, also ISO/IEC
-26300) content extractor for `.odt`/`.ods`/`.odp`. Detects document kind
-from the `mimetype` entry and extracts `text:p` paragraph text from
-`content.xml`. Operates on an already-unzipped entry table (`{:name
-:bytes}` seq) — the caller unzips the ODF file first, e.g. with
-`org-pkware-zip`. Extracted from `kotoba-lang/kasane`
-(kasane.normalize/odf->doc, ADR-2606272100).
+Safety-bounded OpenDocument Format content inspection in sovereign Kotoba.
 
-## Usage
+`src/odf.kotoba` is the sole production source. An archive capability/provider
+expands the package, validates UTF-8, and passes the decoded `mimetype`,
+`content.xml`, and entry count across the typed ABI. The pure Kotoba module
+detects the document kind and exposes paragraph count plus indexed paragraph
+text. This represents every paragraph without admitting an unbounded host
+sequence.
 
-```clojure
-(require '[odf.core :as odf])
-
-(odf/parse entries)  ; entries = seq of {:name "path" :bytes [...]}
-;; => {:kind :odt|:ods|:odp|:odf :entry-count N :paragraphs ["..." ...]}
-```
+The compiler targets restricted JavaScript and typed WebAssembly. Clojure and
+the JVM are compiler/test hosts only, never the production runtime.
 
 ## Test
 
 ```sh
 clojure -M:test
+clojure -M:lint
 ```
