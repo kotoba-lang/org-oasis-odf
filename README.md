@@ -15,6 +15,6 @@ the JVM are compiler/test hosts only, never the production runtime.
 ## Test
 
 ```sh
-clojure -M:test
-clojure -M:lint
+kbb -M:test
+kbb -M:lint
 ```
